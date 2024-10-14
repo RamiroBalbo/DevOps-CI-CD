@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: appx-api
-        image: ronniemezzapesa/tp-credicoop:latest
+        image: ramirobalbo/devops:appx-api
         ports:
         - containerPort: 8080
         env:
