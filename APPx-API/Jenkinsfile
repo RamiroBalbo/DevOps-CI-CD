@@ -3,9 +3,9 @@ pipeline {
 
     environment {
         WORK_DIR = "/var/jenkins_home/${BUILD_ID}"
-        MINIKUBE_WORK_DIR = "/home/produccion"
-        DOCKER_IMAGE_NAME = "ronniemezzapesa/appx-api"
-        DOCKER_IMAGE_TAG = "latest"
+        MINIKUBE_WORK_DIR = "/var/"
+        DOCKER_IMAGE_NAME = "ramirobalbo/devops"
+        DOCKER_IMAGE_TAG = "appx-api"
     }
 
     stages {
@@ -14,8 +14,8 @@ pipeline {
                 echo 'Checking out SCM-Jobs Project'
                 dir("${WORK_DIR}") {
                     git branch: 'main',
-                        credentialsId: '65f60e0e-fc4d-4b24-a652-b4d214daf024',
-                        url: 'https://github.com/ronniemezzapesa/TP-Grupo01-Credicoop.git'
+                        credentialsId: '71b65a24-f004-41ae-a5b0-302b06df2c3e',
+                        url: 'https://github.com/ramirobalbo/DevOps-CI-CD.git'
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
                     withSonarQubeEnv('SonarQube') {
                         sh """
                             ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=ronniemezzapesa_TP-Grupo01-Credicoop_3341735a-bf16-4217-8f6c-fdc30f507560 \
+                            -Dsonar.projectKey=RamiroBalbo_DevOps-CI-CD_6cf1b0af-d03b-458e-9379-b7d171d4e2e9
                             -Dsonar.sources=${WORK_DIR}/APPx-API \
                             -Dsonar.projectBaseDir=${WORK_DIR}/APPx-API
                         """
@@ -66,11 +66,12 @@ pipeline {
         }
 
         stage('Restart Deployment') {
-            agent { label 'minikube' }
+            agent { label 'minikube-java' }
             steps {
                 echo 'Restarting Deployment'
                 sh '''
-                    minikube kubectl -- rollout restart deployment appx-api-deployment
+                    alias kubectl="minikube kubectl --"
+                    kubectl rollout restart deployment appx-api-deployment
                 '''
             }
         }

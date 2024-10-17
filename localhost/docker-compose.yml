@@ -1,0 +1,34 @@
+# Levanta prometheus y grafano en el localHost
+version: '3.8'
+
+volumes:
+  grafana-data:
+  prometheus-data:
+
+networks:
+  monitoring:
+    driver: bridge
+
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"  # Asegúrate de que este puerto esté libre
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml  # Ruta correcta al archivo de configuración
+      - prometheus-data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml  # Asegúrate de que este archivo exista y sea accesible
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - monitoring
