@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 
   jenkins:
-    image: ronniemezzapesa/tp-credicoop:jenkins-latest
+    image: ramirobalbo/devops:jenkins-latest
     container_name: jenkins
     ports:
       - "8080:8080" 
